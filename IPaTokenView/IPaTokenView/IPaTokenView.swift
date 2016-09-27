@@ -58,7 +58,7 @@ class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(scrollView)
-        let viewsDict = ["view": scrollView]
+        let viewsDict:[String:UIView] = ["view": scrollView]
         self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|",options:NSLayoutFormatOptions(rawValue: 0),metrics:nil,views:viewsDict))
         self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[view]|",options:NSLayoutFormatOptions(rawValue: 0),metrics:nil,views:viewsDict))
         scrollView.scrollsToTop = false
