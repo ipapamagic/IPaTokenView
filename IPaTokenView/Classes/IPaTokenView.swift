@@ -29,7 +29,7 @@ class IPaCatchDeleteTextField: UITextField {
     }
 }
 
-protocol IPaTokenObject {
+@objc public protocol IPaTokenObject {
     func tokenName() -> String
     func tokenBackgroundColor() -> UIColor
     func tokenTextColor() -> UIColor
@@ -37,22 +37,22 @@ protocol IPaTokenObject {
     func tokenSelectedTextColor() -> UIColor
     
 }
-protocol IPaTokenViewDelegate {
+@objc public protocol IPaTokenViewDelegate {
     func tokenViewObjectForName(_ tokenView:IPaTokenView,token:String) -> IPaTokenObject?
-    func tokenViewDidBeginEditing(_ tokenView:IPaTokenView)
-    func tokenViewDidEndEditing(_ tokenView:IPaTokenView)
-    func tokenViewDidEditing(_ tokenView:IPaTokenView,inputToken:String)
-    func tokenViewOnTokenRefreshed(_ tokenView:IPaTokenView)
-    func tokenViewOnSelectToken(_ tokenView:IPaTokenView)
-    func tokenViewOnShowTokenList(_ tokenView:IPaTokenView)
-    func tokenViewOnTokenDeleted(_ tokenView:IPaTokenView,token:String)
-    func tokenViewOnTokenAdded(_ tokenView:IPaTokenView,token:String)
+    @objc optional func tokenViewDidBeginEditing(_ tokenView:IPaTokenView)
+    @objc optional func tokenViewDidEndEditing(_ tokenView:IPaTokenView)
+    @objc optional func tokenViewDidEditing(_ tokenView:IPaTokenView,inputToken:String)
+    @objc optional func tokenViewOnTokenRefreshed(_ tokenView:IPaTokenView)
+    @objc optional func tokenViewOnSelectToken(_ tokenView:IPaTokenView)
+    @objc optional func tokenViewOnShowTokenList(_ tokenView:IPaTokenView)
+    @objc optional func tokenViewOnTokenDeleted(_ tokenView:IPaTokenView,token:String)
+    @objc optional func tokenViewOnTokenAdded(_ tokenView:IPaTokenView,token:String)
 }
-class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate {
-    var delegate:IPaTokenViewDelegate!
-    var contentInsect:UIEdgeInsets = UIEdgeInsetsMake(2, 2, 2, 2)
-    var cellInset:UIEdgeInsets = UIEdgeInsetsMake(2, 2, 2, 2)
-    var cellHeight:CGFloat = 30
+@objc open class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate {
+    @objc open var delegate:IPaTokenViewDelegate!
+    open var contentInsect:UIEdgeInsets = UIEdgeInsetsMake(2, 2, 2, 2)
+    open var cellInset:UIEdgeInsets = UIEdgeInsetsMake(2, 2, 2, 2)
+    open var cellHeight:CGFloat = 30
     
     lazy var contentScrollView:UIScrollView = {
         let scrollView = UIScrollView()
@@ -115,11 +115,11 @@ class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate
         super.init(frame: frame)
         repositionUI()
     }
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         repositionUI()
     }
-    override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         repositionUI()
     }
@@ -178,7 +178,7 @@ class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate
         let originalHeight = contentScrollView.contentSize.height
         contentScrollView.contentSize = CGSize(width: bounds.width, height: tokenInputField.frame.maxY + cellInset.bottom + contentInsect.bottom)
         if let superview = superview , originalHeight != contentScrollView.contentSize.height {
-            delegate.tokenViewOnTokenRefreshed(self)
+            delegate.tokenViewOnTokenRefreshed?(self)
             UIView.animate(withDuration: 0.3, animations: {
                 self.invalidateIntrinsicContentSize()
                 superview.layoutIfNeeded()
@@ -186,11 +186,11 @@ class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate
             
         }
     }
-    override var intrinsicContentSize : CGSize {
+    override open var intrinsicContentSize : CGSize {
         return contentScrollView.contentSize
     }
     @objc fileprivate func onShowTokenList(_ sender:AnyObject) {
-        delegate.tokenViewOnShowTokenList(self)
+        delegate.tokenViewOnShowTokenList?(self)
     }
     func replaceTokens(_ addTokens:[String]) {
         tokens.removeAll()
@@ -223,7 +223,7 @@ class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate
     }
     func addToken(_ token:String) {
         tokenInputField.text = ""
-        delegate.tokenViewDidEditing(self, inputToken: "")
+        delegate.tokenViewDidEditing?(self, inputToken: "")
         if let _ = tokenCells[token] ,let _ = tokens.index(of: token) {
             return
         }
@@ -239,7 +239,7 @@ class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate
         contentScrollView.addSubview(cell)
         repositionUI()
         
-        delegate.tokenViewOnTokenAdded(self, token: token)
+        delegate.tokenViewOnTokenAdded?(self, token: token)
     }
     func deleteToken(_ tokenObject:IPaTokenObject) {
         let token = tokenObject.tokenName()
@@ -262,21 +262,21 @@ class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate
         }
         return nil
     }
-    func onInputFieldChanged(_ sender:AnyObject) {
+    @objc func onInputFieldChanged(_ sender:AnyObject) {
         guard let text = tokenInputField.text else {
-            delegate.tokenViewDidEditing(self, inputToken: "")
+            delegate.tokenViewDidEditing?(self, inputToken: "")
             return
         }
-        delegate.tokenViewDidEditing(self, inputToken: text)
+        delegate.tokenViewDidEditing?(self, inputToken: text)
     }
     //MARK: UITextFieldDelegate
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        delegate.tokenViewDidBeginEditing(self)
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
+        delegate.tokenViewDidBeginEditing?(self)
     }
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        delegate.tokenViewDidEndEditing(self)
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        delegate.tokenViewDidEndEditing?(self)
     }
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if range.length == 0 && string.characters.count == 0 {
             onDeleteKeyInput(textField as! IPaCatchDeleteTextField)
         }
@@ -284,7 +284,7 @@ class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate
         
         return true
     }
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if let text = textField.text , text.characters.count > 0 {
             
             addToken(text)
@@ -318,6 +318,6 @@ class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate
     func onDeleteToken(_ tokenObject:IPaTokenObject)
     {
         deleteToken(tokenObject)
-        delegate.tokenViewOnTokenDeleted(self, token: tokenObject.tokenName())
+        delegate.tokenViewOnTokenDeleted?(self, token: tokenObject.tokenName())
     }
 }

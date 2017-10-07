@@ -10,7 +10,7 @@ import UIKit
 protocol IPaTokenCellDelegate {
     func onDeleteToken(_ tokenObject:IPaTokenObject)
 }
-class IPaTokenCell: UIView {
+open class IPaTokenCell: UIView {
     var delegate:IPaTokenCellDelegate!
     var _tokenLabel:UILabel?
     var tokenLabel:UILabel {
@@ -49,7 +49,7 @@ class IPaTokenCell: UIView {
         super.init(frame: frame)
         initialUI()
     }
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         initialUI()
     }
@@ -61,10 +61,10 @@ class IPaTokenCell: UIView {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(IPaTokenCell.onTap(_:)))
         addGestureRecognizer(tapGesture)
     }
-    override var canBecomeFirstResponder : Bool {
+    override open var canBecomeFirstResponder : Bool {
         return true
     }
-    override func becomeFirstResponder() -> Bool {
+    override open func becomeFirstResponder() -> Bool {
         
         let ret = super.becomeFirstResponder()
         refreshColor()
@@ -76,13 +76,13 @@ class IPaTokenCell: UIView {
 
         return ret
     }
-    override func resignFirstResponder() -> Bool {
+    override open func resignFirstResponder() -> Bool {
         
         let ret = super.resignFirstResponder()
         refreshColor()
         return ret
     }
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+    override open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         
         return action == #selector(IPaTokenCell.onDeleteToken(_:))
     }
@@ -90,11 +90,11 @@ class IPaTokenCell: UIView {
         backgroundColor = isFirstResponder ? _tokenObject.tokenSelectedBackgroundColor() : _tokenObject.tokenBackgroundColor()
         tokenLabel.textColor = isFirstResponder ? _tokenObject.tokenSelectedTextColor() : _tokenObject.tokenTextColor()
     }
-    func onTap(_ sender:AnyObject) {
+    @objc func onTap(_ sender:AnyObject) {
 
         _ = becomeFirstResponder()
     }
-    func onDeleteToken(_ sender:AnyObject) {
+    @objc func onDeleteToken(_ sender:AnyObject) {
         delegate.onDeleteToken(tokenObject)
     }
 }

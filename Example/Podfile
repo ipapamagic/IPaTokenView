@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'IPaTokenView_Example' do
+  pod 'IPaTokenView', :path => '../'
+
+  target 'IPaTokenView_Tests' do
+    inherit! :search_paths
+
+    pod 'FBSnapshotTestCase'
+  end
+end

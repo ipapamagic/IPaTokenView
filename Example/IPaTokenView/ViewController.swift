@@ -9,7 +9,8 @@
 import UIKit
 import IPaTokenView
 class ViewController: UIViewController,IPaTokenViewDelegate {
-
+    
+    
     @IBOutlet var tokenView: IPaTokenView!
     var tokens = [String:TestTokenObject]()
     override func viewDidLoad() {
@@ -23,9 +24,7 @@ class ViewController: UIViewController,IPaTokenViewDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    //MARK: IPaTokenViewDelegate
-    func tokenObjectForName(token:String) -> IPaTokenObject
-    {
+    func tokenViewObjectForName(_ tokenView: IPaTokenView, token: String) -> IPaTokenObject? {
         if let object = tokens[token] {
             return object
         }
@@ -34,9 +33,8 @@ class ViewController: UIViewController,IPaTokenViewDelegate {
         tokens[token] = newObject
         return newObject
     }
-    func tokenViewDidBeginEditing(tokenView:IPaTokenView)
-    {
-        
-    }
+    
+   
+    
 }
 

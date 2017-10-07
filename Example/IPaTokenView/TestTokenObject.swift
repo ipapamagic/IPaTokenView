@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import IPaTokenView
 class TestTokenObject :IPaTokenObject {
     var token: String = ""
     func tokenName() -> String
@@ -16,18 +17,18 @@ class TestTokenObject :IPaTokenObject {
     }
     func tokenBackgroundColor() -> UIColor
     {
-        return UIColor.greenColor()
+        return UIColor.green
     }
     func tokenTextColor() -> UIColor
     {
-        return UIColor.whiteColor()
+        return UIColor.white
     }
     func tokenSelectedBackgroundColor() -> UIColor
     {
-        return UIColor.darkGrayColor()
+        return UIColor.darkGray
     }
     func tokenSelectedTextColor() -> UIColor
     {
-        return UIColor.whiteColor()
+        return UIColor.white
     }
 }
