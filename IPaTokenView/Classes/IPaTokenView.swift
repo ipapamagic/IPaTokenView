@@ -11,9 +11,9 @@ protocol IPaCatchDeleteTextFieldDelegate: UITextFieldDelegate
 {
     func onDeleteKeyInput(_ textField:IPaCatchDeleteTextField)
 }
-class IPaCatchDeleteTextField: UITextField {
+open class IPaCatchDeleteTextField: UITextField {
     var catchDeleteDelegate:IPaCatchDeleteTextFieldDelegate?
-    override var delegate: UITextFieldDelegate? {
+    override open var delegate: UITextFieldDelegate? {
         get {
             return super.delegate
         }
@@ -77,7 +77,7 @@ class IPaCatchDeleteTextField: UITextField {
         return label
         
     }()
-    lazy var tokenInputField:IPaCatchDeleteTextField = {
+    open lazy var tokenInputField:IPaCatchDeleteTextField = {
         
         let inputField = IPaCatchDeleteTextField()
         inputField.translatesAutoresizingMaskIntoConstraints = true
@@ -99,7 +99,7 @@ class IPaCatchDeleteTextField: UITextField {
     
     }()
     var _hideAddTokenButton = false
-    var hideAddTokenButton:Bool {
+    open var hideAddTokenButton:Bool {
         get {
             return _hideAddTokenButton
         }
@@ -110,7 +110,7 @@ class IPaCatchDeleteTextField: UITextField {
         }
     }
     var tokenCells = [String:IPaTokenCell]()
-    var tokens = [String]()
+    open var tokens = [String]()
     override init(frame: CGRect) {
         super.init(frame: frame)
         repositionUI()
@@ -192,7 +192,7 @@ class IPaCatchDeleteTextField: UITextField {
     @objc fileprivate func onShowTokenList(_ sender:AnyObject) {
         delegate.tokenViewOnShowTokenList?(self)
     }
-    func replaceTokens(_ addTokens:[String]) {
+    open func replaceTokens(_ addTokens:[String]) {
         tokens.removeAll()
         for (_,cell) in tokenCells {
             cell.removeFromSuperview()
@@ -213,7 +213,7 @@ class IPaCatchDeleteTextField: UITextField {
         }
         repositionUI()
     }
-    func removeAllTokens() {
+    open func removeAllTokens() {
         tokens.removeAll()
         for (_,cell) in tokenCells {
             cell.removeFromSuperview()
@@ -221,7 +221,7 @@ class IPaCatchDeleteTextField: UITextField {
         tokenCells.removeAll()
         repositionUI()
     }
-    func addToken(_ token:String) {
+    open func addToken(_ token:String) {
         tokenInputField.text = ""
         delegate.tokenViewDidEditing?(self, inputToken: "")
         if let _ = tokenCells[token] ,let _ = tokens.index(of: token) {
@@ -277,7 +277,7 @@ class IPaCatchDeleteTextField: UITextField {
         delegate.tokenViewDidEndEditing?(self)
     }
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if range.length == 0 && string.characters.count == 0 {
+        if range.length == 0 && string.count == 0 {
             onDeleteKeyInput(textField as! IPaCatchDeleteTextField)
         }
       
@@ -285,7 +285,7 @@ class IPaCatchDeleteTextField: UITextField {
         return true
     }
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let text = textField.text , text.characters.count > 0 {
+        if let text = textField.text , text.count > 0 {
             
             addToken(text)
             
@@ -299,7 +299,7 @@ class IPaCatchDeleteTextField: UITextField {
     //MARK: IPaCatchDeleteTextFieldDelegate
     
     func onDeleteKeyInput(_ textField:IPaCatchDeleteTextField) {
-        if textField.text?.characters.count == 0 {
+        if textField.text?.count == 0 {
             //select last token
             if let selectedCell = selectedTokenCell() {
                 deleteToken(selectedCell.tokenObject)
