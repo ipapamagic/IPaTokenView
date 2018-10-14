@@ -8,9 +8,9 @@
 
 Pod::Spec.new do |s|
   s.name             = 'IPaTokenView'
-  s.version          = '2.0'
+  s.version          = '2.1'
   s.summary          = 'A short description of IPaTokenView.'
-
+  s.swift_version    = '4.2'
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
 #   * Try to keep it short, snappy and to the point.

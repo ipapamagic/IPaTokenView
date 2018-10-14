@@ -50,8 +50,8 @@ open class IPaCatchDeleteTextField: UITextField {
 }
 @objc open class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate {
     @objc open var delegate:IPaTokenViewDelegate!
-    open var contentInsect:UIEdgeInsets = UIEdgeInsetsMake(2, 2, 2, 2)
-    open var cellInset:UIEdgeInsets = UIEdgeInsetsMake(2, 2, 2, 2)
+    open var contentInsect:UIEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
+    open var cellInset:UIEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
     open var cellHeight:CGFloat = 30
     
     lazy var contentScrollView:UIScrollView = {
@@ -59,8 +59,8 @@ open class IPaCatchDeleteTextField: UITextField {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(scrollView)
         let viewsDict:[String:UIView] = ["view": scrollView]
-        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|",options:NSLayoutFormatOptions(rawValue: 0),metrics:nil,views:viewsDict))
-        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[view]|",options:NSLayoutFormatOptions(rawValue: 0),metrics:nil,views:viewsDict))
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[view]|",options:NSLayoutConstraint.FormatOptions(rawValue: 0),metrics:nil,views:viewsDict))
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[view]|",options:NSLayoutConstraint.FormatOptions(rawValue: 0),metrics:nil,views:viewsDict))
         scrollView.scrollsToTop = false
         return scrollView
     
@@ -90,7 +90,7 @@ open class IPaCatchDeleteTextField: UITextField {
     }()
     
     lazy var addTokenButton:UIButton = {
-        let button = UIButton(type: UIButtonType.contactAdd)
+        let button = UIButton(type: UIButton.ButtonType.contactAdd)
         button.translatesAutoresizingMaskIntoConstraints = true
         button.addTarget(self, action: #selector(IPaTokenView.onShowTokenList(_:)), for: .touchUpInside)
         self.contentScrollView.addSubview(button)
