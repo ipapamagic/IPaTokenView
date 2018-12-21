@@ -48,8 +48,15 @@ open class IPaCatchDeleteTextField: UITextField {
     @objc optional func tokenViewOnTokenDeleted(_ tokenView:IPaTokenView,token:String)
     @objc optional func tokenViewOnTokenAdded(_ tokenView:IPaTokenView,token:String)
 }
-@objc open class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate,IPaTokenCellDelegate {
+@objc open class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate {
     @objc open var delegate:IPaTokenViewDelegate!
+    open var isEditable = true {
+        didSet {
+            tokenInputField.isHidden = !isEditable
+            addTokenButton.isHidden = !isEditable || self._hideAddTokenButton
+            repositionUI()
+        }
+    }
     open var contentInsect:UIEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
     open var cellInset:UIEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
     open var cellHeight:CGFloat = 30
@@ -101,7 +108,7 @@ open class IPaCatchDeleteTextField: UITextField {
     var _hideAddTokenButton = false
     open var hideAddTokenButton:Bool {
         get {
-            return _hideAddTokenButton
+            return self.isEditable || _hideAddTokenButton
         }
         set {
             _hideAddTokenButton = newValue
@@ -314,10 +321,16 @@ open class IPaCatchDeleteTextField: UITextField {
         }
     }
     
-    //MARK: IPaTokenCellDelegate
+    
+}
+extension IPaTokenView:IPaTokenCellDelegate
+{
     func onDeleteToken(_ tokenObject:IPaTokenObject)
     {
         deleteToken(tokenObject)
         delegate.tokenViewOnTokenDeleted?(self, token: tokenObject.tokenName())
+    }
+    func shouldBecomeFirstResponder() -> Bool {
+        return isEditable
     }
 }

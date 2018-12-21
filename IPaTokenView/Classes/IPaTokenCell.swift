@@ -9,6 +9,7 @@
 import UIKit
 protocol IPaTokenCellDelegate {
     func onDeleteToken(_ tokenObject:IPaTokenObject)
+    func shouldBecomeFirstResponder() -> Bool
 }
 open class IPaTokenCell: UIView {
     var delegate:IPaTokenCellDelegate!
@@ -44,7 +45,10 @@ open class IPaTokenCell: UIView {
             tokenLabel.sizeToFit()
         }
     }
-    
+    lazy var tapGesture:UITapGestureRecognizer = {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(IPaTokenCell.onTap(_:)))
+        return tapGesture
+    }()
     override init(frame: CGRect) {
         super.init(frame: frame)
         initialUI()
@@ -58,11 +62,11 @@ open class IPaTokenCell: UIView {
         layer.cornerRadius = 8
         layer.masksToBounds = true
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(IPaTokenCell.onTap(_:)))
-        addGestureRecognizer(tapGesture)
+        
+        addGestureRecognizer(self.tapGesture)
     }
     override open var canBecomeFirstResponder : Bool {
-        return true
+        return delegate.shouldBecomeFirstResponder()
     }
     override open func becomeFirstResponder() -> Bool {
         
@@ -90,8 +94,10 @@ open class IPaTokenCell: UIView {
         backgroundColor = isFirstResponder ? _tokenObject.tokenSelectedBackgroundColor() : _tokenObject.tokenBackgroundColor()
         tokenLabel.textColor = isFirstResponder ? _tokenObject.tokenSelectedTextColor() : _tokenObject.tokenTextColor()
     }
-    @objc func onTap(_ sender:AnyObject) {
-
+    @objc func onTap(_ sender:Any) {
+        if !delegate.shouldBecomeFirstResponder() {
+            return
+        }
         _ = becomeFirstResponder()
     }
     @objc func onDeleteToken(_ sender:AnyObject) {
