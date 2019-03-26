@@ -50,6 +50,14 @@ open class IPaCatchDeleteTextField: UITextField {
 }
 @objc open class IPaTokenView: UIView ,IPaCatchDeleteTextFieldDelegate {
     @objc open var delegate:IPaTokenViewDelegate!
+    open var font:UIFont = UIFont.systemFont(ofSize: 14) {
+        didSet {
+            for cell in tokenCells.values {
+                cell.tokenLabel.font = self.font
+                cell.reloadSize()
+            }
+        }
+    }
     open var isEditable = true {
         didSet {
             tokenInputField.isHidden = !isEditable
@@ -60,7 +68,7 @@ open class IPaCatchDeleteTextField: UITextField {
     open var contentInsect:UIEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
     open var cellInset:UIEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
     open var cellHeight:CGFloat = 30
-    
+    open var cellCornerRadius:CGFloat = 4
     lazy var contentScrollView:UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -213,8 +221,11 @@ open class IPaCatchDeleteTextField: UITextField {
             tokens.append(token)
             let cell = IPaTokenCell()
             cell.translatesAutoresizingMaskIntoConstraints = true
+            cell.tokenLabel.font = self.font
             cell.tokenObject = tokenObject
+            cell.layer.cornerRadius = self.cellCornerRadius
             cell.delegate = self
+            
             tokenCells[token] = cell
             contentScrollView.addSubview(cell)
         }
@@ -231,7 +242,7 @@ open class IPaCatchDeleteTextField: UITextField {
     open func addToken(_ token:String) {
         tokenInputField.text = ""
         delegate.tokenViewDidEditing?(self, inputToken: "")
-        if let _ = tokenCells[token] ,let _ = tokens.index(of: token) {
+        if let _ = tokenCells[token] ,let _ = tokens.firstIndex(of: token) {
             return
         }
         guard let tokenObject = delegate.tokenViewObjectForName(self,token:token) else {
@@ -240,8 +251,11 @@ open class IPaCatchDeleteTextField: UITextField {
         tokens.append(token)
         let cell = IPaTokenCell()
         cell.translatesAutoresizingMaskIntoConstraints = true
+        cell.tokenLabel.font = self.font
         cell.tokenObject = tokenObject
+        cell.layer.cornerRadius = self.cellCornerRadius
         cell.delegate = self
+        
         tokenCells[token] = cell
         contentScrollView.addSubview(cell)
         repositionUI()
@@ -250,7 +264,7 @@ open class IPaCatchDeleteTextField: UITextField {
     }
     func deleteToken(_ tokenObject:IPaTokenObject) {
         let token = tokenObject.tokenName()
-        guard let cell = tokenCells[token] ,let index = tokens.index(of: token) else {
+        guard let cell = tokenCells[token] ,let index = tokens.firstIndex(of: token) else {
             return
         }
         cell.removeFromSuperview()
