@@ -38,11 +38,7 @@ open class IPaTokenCell: UIView {
             _tokenObject = newValue
             refreshColor()
             tokenLabel.text = _tokenObject.tokenName()
-            tokenLabel.sizeToFit()
-            var rect = frame
-            rect.size.width = tokenLabel.frame.maxX + 8
-            frame = rect
-            tokenLabel.sizeToFit()
+            self.reloadSize()
         }
     }
     lazy var tapGesture:UITapGestureRecognizer = {
@@ -57,9 +53,15 @@ open class IPaTokenCell: UIView {
         super.init(coder: aDecoder)
         initialUI()
     }
-    
+    func reloadSize() {
+        tokenLabel.sizeToFit()
+        var rect = frame
+        rect.size.width = tokenLabel.frame.maxX + 8
+        frame = rect
+        tokenLabel.sizeToFit()
+    }
     fileprivate func initialUI() {
-        layer.cornerRadius = 8
+        
         layer.masksToBounds = true
         
         
