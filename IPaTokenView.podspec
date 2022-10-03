@@ -8,9 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'IPaTokenView'
-  s.version          = '2.3'
+  s.version          = '2.3.0'
   s.summary          = 'A short description of IPaTokenView.'
-  s.swift_version    = '5.0'
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
 #   * Try to keep it short, snappy and to the point.
@@ -30,7 +29,7 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '9.0'
 
-  s.source_files = 'IPaTokenView/Classes/**/*'
+  s.source_files = 'Sources/IPaTokenView/**/*'
   
   # s.resource_bundles = {
   #   'IPaTokenView' => ['IPaTokenView/Assets/*.png']
